@@ -16,7 +16,6 @@ FileSystem.prototype.createPath = function (path, value) {
     fileSystem.current = fileSystem.root;
     let size = path.length;
 
-    //start search from end, instead of applying the in-built method 'lastIndexOf()'
     fileSystem.indexOfLastForwardSlash = 0;
     for (let i = size - 1; i >= 0; i--) {
         if (path.charAt(i) === '/') {
