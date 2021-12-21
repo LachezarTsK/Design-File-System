@@ -1,9 +1,9 @@
 
 var FileSystem = function () {
-    FileSystem.prototype.root = new TrieNode();
-    FileSystem.prototype.root.value = 0;
-    FileSystem.prototype.current = FileSystem.prototype.root;
-    FileSystem.prototype.indexOfLastForwardSlash = 0;
+    this.root = new TrieNode();
+    this.root.value = 0;
+    this.current = this.root;
+    this.indexOfLastForwardSlash = 0;
 };
 
 /** 
@@ -12,38 +12,38 @@ var FileSystem = function () {
  * @return {boolean}
  */
 FileSystem.prototype.createPath = function (path, value) {
-    const fileSystem = FileSystem.prototype;
-    fileSystem.current = fileSystem.root;
+
+    this.current = this.root;
     let size = path.length;
 
-    fileSystem.indexOfLastForwardSlash = 0;
+    this.indexOfLastForwardSlash = 0;
     for (let i = size - 1; i >= 0; i--) {
         if (path.charAt(i) === '/') {
-            fileSystem.indexOfLastForwardSlash = i;
+            this.indexOfLastForwardSlash = i;
             break;
         }
     }
 
-    if (!fileSystem.hasParentPath(path)) {
+    if (!this.hasParentPath(path)) {
         return false;
     }
 
-    for (let i = fileSystem.indexOfLastForwardSlash; i < size; i++) {
-        let index = fileSystem.getIndexInTrieBranch(path.charAt(i));
-        if (fileSystem.current.branches[index] === undefined) {
-            fileSystem.current.branches[index] = new TrieNode();
+    for (let i = this.indexOfLastForwardSlash; i < size; i++) {
+        let index = this.getIndexInTrieBranch(path.charAt(i));
+        if (this.current.branches[index] === undefined) {
+            this.current.branches[index] = new TrieNode();
         }
-        fileSystem.current = fileSystem.current.branches[index];
+        this.current = this.current.branches[index];
     }
 
     /*
      If (current == root && root.value = -1) this boollean statement will return incorrectly.
      That's why root.value is initiated to '0'.
      */
-    if (fileSystem.current.value !== -1) {
+    if (this.current.value !== -1) {
         return false;
     }
-    fileSystem.current.value = value;
+    this.current.value = value;
     return true;
 };
 
@@ -52,17 +52,17 @@ FileSystem.prototype.createPath = function (path, value) {
  * @return {number}
  */
 FileSystem.prototype.get = function (path) {
-    const fileSystem = FileSystem.prototype;
-    fileSystem.current = fileSystem.root;
+
+    this.current = this.root;
     let size = path.length;
     for (let i = 0; i < size; i++) {
-        let index = fileSystem.getIndexInTrieBranch(path.charAt(i));
-        if (fileSystem.current.branches[index] === undefined) {
+        let index = this.getIndexInTrieBranch(path.charAt(i));
+        if (this.current.branches[index] === undefined) {
             return -1;
         }
-        fileSystem.current = fileSystem.current.branches[index];
+        this.current = this.current.branches[index];
     }
-    return fileSystem.current.value;
+    return this.current.value;
 };
 
 /** 
@@ -70,15 +70,15 @@ FileSystem.prototype.get = function (path) {
  * @return {boolean}
  */
 FileSystem.prototype.hasParentPath = function (path) {
-    const fileSystem = FileSystem.prototype;
-    for (let i = 0; i < fileSystem.indexOfLastForwardSlash; i++) {
-        let index = fileSystem.getIndexInTrieBranch(path.charAt(i));
-        if (fileSystem.current.branches[index] === undefined) {
+
+    for (let i = 0; i < this.indexOfLastForwardSlash; i++) {
+        let index = this.getIndexInTrieBranch(path.charAt(i));
+        if (this.current.branches[index] === undefined) {
             return false;
         }
-        fileSystem.current = fileSystem.current.branches[index];
+        this.current = this.current.branches[index];
     }
-    return  fileSystem.current.value !== -1;
+    return  this.current.value !== -1;
 };
 
 /** 
